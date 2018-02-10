@@ -4,6 +4,7 @@ import pathlib
 import sys
 import time
 from datetime import datetime
+from tqdm import tqdm
 
 
 def print_version(ctx, param, value):
@@ -20,7 +21,7 @@ def print_version(ctx, param, value):
 def cli(dest, images_path):
     """CIclustering is an automation tool for Collective Idea"""
 
-    # Validat path to images
+    # Validate path to images
     images_path = pathlib.Path(images_path)
     if not images_path.exists():
         click.secho('Error: No such directory', fg='red') 
@@ -36,10 +37,11 @@ def cli(dest, images_path):
     
     # Count only jpg images in path
     images = [image for image in images_path.glob('*.jpg')]
-    click.echo('Reading files for process: {} media'.format(len(images)))
+    length = len(images)
+    click.echo('Reading files for process: {} media'.format(length))
 
-    # TODO: Add progress bar to show image rcognition progress
-    for image in images:
-        click.echo(image)
+    for image in tqdm(images, desc='Recognising', total=length, ncols=100):
+        # Recognising code goes here.
+        time.sleep(0.1)
 
     click.secho('Done!', bold=True, fg='green')
