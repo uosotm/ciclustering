@@ -10,6 +10,7 @@ setup(
     py_modules=['ciclustering'],
     install_requires=[
         'click',
+        'tqdm',
     ],
     entry_points={'console_scripts': ['ciclustering=main:cli'], },
 )
