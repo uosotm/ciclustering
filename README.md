@@ -49,15 +49,15 @@ Options:
 
 ### Arguments
 
-- IMAGES\_PATH: string
+- IMAGES\_PATH: string  
     Path to directory that store input images.
 
 ### Options
  
-- keyword: string
+- keyword: string  
 
-- version:
+- version:  
     Print version.
 
-- help: 
-    Show basic informations
+- help:  
+    Show basic informations.
