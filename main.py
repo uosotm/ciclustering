@@ -15,11 +15,11 @@ def print_version(ctx, param, value):
 
 @click.command()
 @click.option('--version', is_flag=True, callback=print_version,
-        expose_value=False, is_eager=True, help='Display version.')
+        expose_value=False, is_eager=True, help='Print version.')
 @click.option('--dest', default='dest', help='Path to output files.')
 @click.argument('images_path')
 def cli(dest, images_path):
-    """CIclustering is an automation tool for Collective Idea"""
+    """CI clustering is an automation tool for Collective Idea"""
 
     # Validate path to images
     images_path = pathlib.Path(images_path)
@@ -31,7 +31,7 @@ def cli(dest, images_path):
         click.secho('Error: {} isn\'t directory'.format(str(images_path)), fg='red')
         sys.exit(1)
 
-    click.echo('Path to input files: {}'.format(images_path.resolve()))
+    click.echo('Path to target directory: {}'.format(images_path.resolve()))
 
     # TODO: Validate and create a directory for output files
     
