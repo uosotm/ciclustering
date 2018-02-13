@@ -33,7 +33,14 @@ def cli(dest, images_path):
 
     click.echo('Path to target directory: {}'.format(images_path.resolve()))
 
-    # TODO: Validate and create a directory for output files
+    # Validate and create a directory for output files
+    dest = pathlib.Path(dest)
+    try:
+        dest.mkdir(parents=True, exist_ok=True)
+    except FileExistsError:
+        click.secho('Error: {} isn\'t directory'.format(dest.resolve()), fg='red')
+        sys.exit(1)
+    click.echo('Created a directory for results: {}'.format(dest.resolve()))
     
     # Count only jpg images in path
     images = [image for image in images_path.glob('*.jpg')]
