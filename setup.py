@@ -11,6 +11,7 @@ setup(
     install_requires=[
         'click',
         'tqdm',
+        'requests',
     ],
     entry_points={'console_scripts': ['ciclustering=main:cli'], },
 )
