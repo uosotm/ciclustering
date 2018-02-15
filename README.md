@@ -54,10 +54,13 @@ Options:
 
 ### Options
  
-- keyword: string  
+- **keyword**: string  
 
-- version:  
+- **dest**: string  
+    Specify path to output files.  
+
+- **version**:  
     Print version.
 
-- help:  
+- **help**:  
     Show basic informations.
