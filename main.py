@@ -1,6 +1,8 @@
+import base64
 import click
 import glob
 import pathlib
+import requests
 import sys
 import time
 from datetime import datetime
@@ -12,6 +14,29 @@ def print_version(ctx, param, value):
         return
     click.echo('Version 0.1.0')
     ctx.exit()
+
+def encode_image(image):
+    image_content = image.read()
+    return base.b64encode(image_content).decode('UTF-8')
+
+def upload(url, encoded_image):
+    payload = {
+      "requests": [
+        {
+          "image": {
+            "content": encoded_image
+          },
+          "features": [
+            {
+              "type": "LABEL_DETECTION",
+              "maxResults": 1
+            }
+          ]
+        }
+      ]
+    }
+    r = requests.post(url, json=payload)
+    return r.text
 
 @click.command()
 @click.option('--version', is_flag=True, callback=print_version,
@@ -47,7 +72,7 @@ def cli(dest, images_path):
     length = len(images)
     click.echo('Reading files for process: {} media'.format(length))
 
-    for image in tqdm(images, desc='Recognising', total=length, ncols=100):
+    for image in tqdm(images, desc='Recognising', total=length, ncols=10):
         # Recognising code goes here.
         time.sleep(0.1)
 
