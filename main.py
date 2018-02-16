@@ -19,24 +19,29 @@ def encode_image(image):
     image_content = image.read()
     return base.b64encode(image_content).decode('UTF-8')
 
-def upload(url, encoded_image):
-    payload = {
-      "requests": [
-        {
-          "image": {
-            "content": encoded_image
-          },
-          "features": [
-            {
-              "type": "LABEL_DETECTION",
-              "maxResults": 1
-            }
-          ]
-        }
-      ]
+def create_request(encoded_image):
+    request_list = []
+
+    content_json_obj = {
+        'content': encoded_image
     }
-    r = requests.post(url, json=payload)
+
+    feature_json_obj = []
+    feature_json_obj.append({
+        'type': 'LABEL_DETECTION',
+        'maxResults': 1
+    })
+
+    request_list.append({
+        'features': feature_json_obj,
+        'image': content_json_obj,
+    })
+    return { 'requests': request_list }
+
+def upload(url, data):
+    r = requests.post(url, json=data)
     return r.text
+
 
 @click.command()
 @click.option('--version', is_flag=True, callback=print_version,
