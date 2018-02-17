@@ -4,6 +4,7 @@
 import base64
 import configparser
 import click
+import csv
 import glob
 import json
 import pathlib
@@ -140,19 +141,29 @@ def cli(config, dest, mode, images_path):
     cva_url = config['default']['cva_url']
     cva_key = config['default']['cva_key']
 
-    for image in tqdm(images, desc='Recognising', total=length, ncols=10):
-        with image.open('rb') as imagefile:
-            encoded_image = encode_image(imagefile)
+    with (dest / 'results.csv').open('w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
 
-        payload = create_request(encoded_image)
-        res = upload(cva_url, cva_key, payload)
+        for image in tqdm(images, desc='Recognising', total=length, ncols=10):
+            row = [str(image)]
+            with image.open('rb') as imagefile:
+                encoded_image = encode_image(imagefile)
 
-        # Organize files to proper directory 
-        labels = json.loads(res)['responses'][0]['labelAnnotations']
-        descriptions = [label['description'] for label in labels]
-        if keyword in descriptions:
-            shutil.move(str(image), str(dest_keyword))
-        else:
-            shutil.move(str(image), str(dest_others))
+            payload = create_request(encoded_image)
+            res = upload(cva_url, cva_key, payload)
+
+            # Organize files to proper directory 
+            labels = json.loads(res)['responses'][0]['labelAnnotations']
+            descriptions = [label['description'] for label in labels]
+            scores = [label['score'] for label in labels]
+            if keyword in descriptions:
+                shutil.move(str(image), str(dest_keyword))
+            else:
+                shutil.move(str(image), str(dest_others))
+
+            for name, score in zip(descriptions, scores):
+                row.append('{}({})'.format(name, score))
+
+            writer.writerow(row)
 
     click.secho('Done!', bold=True, fg='green')
