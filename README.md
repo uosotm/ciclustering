@@ -17,6 +17,8 @@ Ciclustering is an automation tool to collect, recognize and organize images for
 - Python3.5 or above
 - pip
 
+**Python2 is not supported.**
+
 ## Installation
 
 If you don't have Python3, it needs to be installed.
@@ -34,7 +36,24 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py
 ```
 
-TODO: Add installation guide for ciclustering
+Go to the directory where you unzipped the file `ciclustering-master.zip`.
+
+```
+cd path/to/ciclustering-master/
+```
+
+then, you can install the package with pip command.  
+*Note: If you use `pip`, please make sure the command is relevent with Python3 (it can be confirmed with `pip --version`)*
+
+```
+pip install .
+```
+
+or
+
+```
+pip3 install .
+```
 
 ## Documentation
 
