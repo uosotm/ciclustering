@@ -77,14 +77,25 @@ def upload(url, key, data):
 
 @click.command()
 @click.option('--version', is_flag=True, callback=print_version,
-              expose_value=False, is_eager=True, help='Print version.')
+              expose_value=False, is_eager=True,
+              help='Print version.')
 @click.option('--config', callback=load_config,
               default=(pathlib.Path.home() / '.ciclustering'),
               help='Path to config file.')
-@click.option('--dest', default='dest', help='Path to output files.')
+@click.option('--dest', default='dest',
+              help='Path to output files.')
+@click.option('--mode', type=click.Choice(['object', 'human']),
+              default='object', help='Specify recognition mode')
 @click.argument('images_path')
-def cli(config, dest, images_path):
+def cli(config, dest, mode, images_path):
     """CI clustering is an automation tool for Collective Idea"""
+
+    # Initialize recognition mode
+    if mode == 'object':
+        keyword = click.prompt('Please enter a keyward')
+    else:
+        click.echo('Not supported currently.')
+        sys.exit(0)
 
     # Validate path to images
     images_path = pathlib.Path(images_path)
@@ -102,13 +113,18 @@ def cli(config, dest, images_path):
 
     # Validate and create a directory for output files
     dest = pathlib.Path(dest)
+    dest_keyword = dest / keyword
+    dest_others = dest / 'others'
     try:
         dest.mkdir(parents=True, exist_ok=True)
+        dest_keyword.mkdir(parents=True, exist_ok=True)
+        dest_others.mkdir(parents=True, exist_ok=True)
 
     except FileExistsError:
         click.secho('Error: {} isn\'t directory'.format(dest.resolve()),
                     fg='red', err=True)
         sys.exit(1)
+
     click.echo('Created a directory for results: {}'.format(dest.resolve()))
     
     # Count only jpg images in path
