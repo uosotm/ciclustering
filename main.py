@@ -1,4 +1,5 @@
 import base64
+import configparser
 import click
 import glob
 import pathlib
@@ -14,6 +15,37 @@ def print_version(ctx, param, value):
         return
     click.echo('Version 0.1.0')
     ctx.exit()
+
+def load_config(ctx, param, value):
+    config_path = value
+    config = configparser.ConfigParser()
+
+    if not config_path.exists():
+        click.echo('Couldn\'t find ({}) to get config.'.format(config_path))
+        if click.confirm('Would you like to create a new config there?'):  
+            new_config(config_path, config)
+            ctx.exit('Please run the command again.')
+        else:
+            ctx.exit('Exit.')
+
+    config.read(config_path, encoding='utf8')
+    return config
+
+def new_config(config_path, config):
+    cva_url = click.prompt('\nRequests to',
+            default='https://vision.googleapis.com/v1/images:annotate')
+    cva_key = click.prompt('Please enter your API KEY')
+    
+    config['default'] = { 'cva_url': cva_url,
+                          'cva_key': cva_key }
+
+    with config_path.open('w') as configfile:
+        config.write(configfile)
+        click.echo('\nSaving config...')
+
+
+    click.secho('Successfuly created the config file!',
+            bold=True, fg='green')
 
 def encode_image(image):
     image_content = image.read()
@@ -45,10 +77,13 @@ def upload(url, data):
 
 @click.command()
 @click.option('--version', is_flag=True, callback=print_version,
-        expose_value=False, is_eager=True, help='Print version.')
+              expose_value=False, is_eager=True, help='Print version.')
+@click.option('--config', callback=load_config,
+              default=(pathlib.Path.home() / '.ciclustering'),
+              help='Path to config file.')
 @click.option('--dest', default='dest', help='Path to output files.')
 @click.argument('images_path')
-def cli(dest, images_path):
+def cli(config, dest, images_path):
     """CI clustering is an automation tool for Collective Idea"""
 
     # Validate path to images
