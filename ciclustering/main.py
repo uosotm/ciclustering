@@ -24,7 +24,7 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 def load_config(ctx, param, value):
-    config_path = value
+    config_path = pathlib.Path(value)
     config = configparser.ConfigParser()
 
     if not config_path.exists():
@@ -86,7 +86,7 @@ def upload(url, key, data):
               expose_value=False, is_eager=True,
               help='Print version.')
 @click.option('--config', callback=load_config,
-              default=(pathlib.Path.home() / '.ciclustering'),
+              default=(str(pathlib.Path.home() / '.ciclustering')),
               help='Path to config file.')
 @click.option('--dest', default='dest',
               help='Path to output files.')
