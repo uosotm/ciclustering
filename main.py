@@ -1,9 +1,14 @@
+#!/usr/bin/env python3
+#-*-coding:utf-8-*-
+
 import base64
 import configparser
 import click
 import glob
+import json
 import pathlib
 import requests
+import shutil
 import sys
 import time
 import urllib
@@ -138,8 +143,16 @@ def cli(config, dest, mode, images_path):
     for image in tqdm(images, desc='Recognising', total=length, ncols=10):
         with image.open('rb') as imagefile:
             encoded_image = encode_image(imagefile)
-            payload = create_request(encoded_image)
-            res = upload(cva_url, cva_key, payload)
-            print(res)
+
+        payload = create_request(encoded_image)
+        res = upload(cva_url, cva_key, payload)
+
+        # Organize files to proper directory 
+        labels = json.loads(res)['responses'][0]['labelAnnotations']
+        descriptions = [label['description'] for label in labels]
+        if keyword in descriptions:
+            shutil.move(str(image), str(dest_keyword))
+        else:
+            shutil.move(str(image), str(dest_others))
 
     click.secho('Done!', bold=True, fg='green')
