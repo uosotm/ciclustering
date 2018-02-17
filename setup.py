@@ -7,11 +7,12 @@ setup(
     author='Yuta Katayama',
     author_email='uosotm@gmail.com',
     version='0.1.0',
+    packages=['ciclustering'],
     py_modules=['ciclustering'],
     install_requires=[
         'click',
         'tqdm',
         'requests',
     ],
-    entry_points={'console_scripts': ['ciclustering=main:cli'], },
+    entry_points={'console_scripts': ['ciclustering=ciclustering.main:main'], },
 )
