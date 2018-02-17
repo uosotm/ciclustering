@@ -54,11 +54,13 @@ def cli(dest, images_path):
     # Validate path to images
     images_path = pathlib.Path(images_path)
     if not images_path.exists():
-        click.secho('Error: No such directory', fg='red') 
+        click.secho('Error: No such directory',
+                    fg='red', err=True) 
         sys.exit(1)
 
     if not images_path.is_dir():
-        click.secho('Error: {} isn\'t directory'.format(str(images_path)), fg='red')
+        click.secho('Error: {} isn\'t directory'.format(str(images_path)),
+                    fg='red', err=True)
         sys.exit(1)
 
     click.echo('Path to target directory: {}'.format(images_path.resolve()))
@@ -68,7 +70,8 @@ def cli(dest, images_path):
     try:
         dest.mkdir(parents=True, exist_ok=True)
     except FileExistsError:
-        click.secho('Error: {} isn\'t directory'.format(dest.resolve()), fg='red')
+        click.secho('Error: {} isn\'t directory'.format(dest.resolve()),
+                    fg='red', err=True)
         sys.exit(1)
     click.echo('Created a directory for results: {}'.format(dest.resolve()))
     
