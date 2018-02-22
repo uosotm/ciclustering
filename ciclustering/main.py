@@ -153,7 +153,13 @@ def main(config, dest, mode, images_path):
             res = upload(cva_url, cva_key, payload)
 
             # Organize files to proper directory 
-            labels = json.loads(res)['responses'][0]['labelAnnotations']
+            try:
+                labels = json.loads(res)['responses'][0]['labelAnnotations']
+            except KeyError:
+                click.echo('No label annotations for {}'.format(str(image)))
+                writer.writerow(row)
+                continue
+
             descriptions = [label['description'] for label in labels]
             scores = [label['score'] for label in labels]
             if keyword in descriptions:
