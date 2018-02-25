@@ -72,6 +72,8 @@ Options:
 
 ### Basic Usage
 
+#### Object recognition
+
 For instance, we have a directory like this:
 
 ```
@@ -124,6 +126,16 @@ After running the command, `dest` direcotry should be created to store output fi
 
 `results.csv` has a summary of recognition like `ImageFile, ObjectName1(score), ObjectName2(score)...`. Each lines of csv file are populated as a variable length record.
 
+#### Face detection
+
+To organize image files by detected nuber of humans, run the command as below.
+
+```
+ciclustering path/to/images/ --mode=human
+```
+
+The command executes face detection of Compute Vision API by Goole.
+
 ### Arguments
 
 - IMAGES\_PATH: string  
@@ -138,7 +150,7 @@ After running the command, `dest` direcotry should be created to store output fi
     Specify path to output files.  
     
 - **mode**: chose `object` or `human` (`object` by default)  
-    Indicate recognition mode.  *human mode* is not supported currently.  
+    Indicate recognition mode.
 
 - **version**:  
     Print version.
