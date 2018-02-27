@@ -52,6 +52,14 @@ def new_config(config_path, config):
     click.secho('Successfuly created the config file!',
             bold=True, fg='green')
 
+def ensure_dir(path):
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+    except FileExistsError as e:
+        click.secho('Error: {} isn\'t directory'.format(e),
+                    fg='red', err=True)
+        sys.exit(1)
+
 def encode_image(image):
     image_content = image.read()
     return base64.b64encode(image_content).decode('UTF-8')
