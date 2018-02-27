@@ -36,23 +36,10 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py
 ```
 
-Go to the directory where you unzipped the file `ciclustering-master.zip`.
+To install Ciclustering, run the command:
 
 ```
-cd path/to/ciclustering-master/
-```
-
-then, you can install the package with pip command.  
-*Note: If you use `pip`, please make sure the command is relevent with Python3 (it can be confirmed with `pip --version`)*
-
-```
-pip install .
-```
-
-or
-
-```
-pip3 install .
+pip install git+https://github.com/uosotm/ciclustering.git
 ```
 
 ## Documentation
