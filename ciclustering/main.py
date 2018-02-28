@@ -127,17 +127,9 @@ def main(config, dest, mode, images_path):
 
         # Validate and create a directory for output files
         dest = pathlib.Path(dest)
-        dest_keyword = dest / keyword
-        dest_others = dest / 'others'
-        try:
-            dest.mkdir(parents=True, exist_ok=True)
-            dest_keyword.mkdir(parents=True, exist_ok=True)
-            dest_others.mkdir(parents=True, exist_ok=True)
-
-        except FileExistsError:
-            click.secho('Error: {} isn\'t directory'.format(dest.resolve()),
-                        fg='red', err=True)
-            sys.exit(1)
+        ensure_dir(dest)
+        ensure_dir(dest / keyword)
+        ensure_dir(dest / 'others')
         click.echo('Created a directory for results: {}'.format(dest.resolve()))
         
         # Count only jpg images in path
@@ -193,12 +185,7 @@ def main(config, dest, mode, images_path):
 
         # Validate and create a directory for output files
         dest = pathlib.Path(dest)
-        try:
-            dest.mkdir(parents=True, exist_ok=True)
-        except FileExistsError:
-            click.secho('Error: {} isn\'t directory'.format(dest.resolve()),
-                        fg='red', err=True)
-            sys.exit(1)
+        ensure_dir(dest)
         click.echo('Created a directory for results: {}'.format(dest.resolve()))
 
         # Count only jpg images in path
@@ -227,13 +214,7 @@ def main(config, dest, mode, images_path):
                     faces = 0
 
                 dest_number = pathlib.Path(dest) / str(faces)
-                try:
-                    dest_number.mkdir(parents=True, exist_ok=True)
-                except FileExistsError:
-                    click.secho('Error: {} isn\'t directory'.format(dest_number.resolve()),
-                                fg='red', err=True)
-                    sys.exit(1)
-
+                ensure_dir(dest_number)
                 shutil.move(str(image), str(dest_number))
                 row.append('{}'.format(faces))
                 writer.writerow(row)
