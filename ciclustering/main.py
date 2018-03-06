@@ -23,8 +23,8 @@ def print_version(ctx, param, value):
     click.echo('Version 0.1.0')
     ctx.exit()
 
-def load_config(ctx, param, value):
-    config_path = pathlib.Path(value)
+def load_config(ctx, param, config_path):
+    config_path = pathlib.Path(config_path)
     config = configparser.ConfigParser()
 
     if not config_path.exists():
@@ -34,6 +34,11 @@ def load_config(ctx, param, value):
             ctx.exit('Please run the command again.')
         else:
             ctx.exit('Exit.')
+
+    if config_path.is_dir():
+        click.secho('Error: {} is directory.'.format(config_path.resolve()),
+                    fg='red', err=True)
+        sys.exit(1)
 
     config.read(str(config_path), encoding='utf8')
     return config
