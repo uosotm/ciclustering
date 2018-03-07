@@ -114,36 +114,37 @@ def upload(url, key, data):
 def main(config, dest, mode, images_path):
     """CI clustering is an automation tool for Collective Idea"""
 
-    # Initialize recognition mode
+    cva_url = config['default']['cva_url']
+    cva_key = config['default']['cva_key']
+
+    # Validate path to images
+    images_path = pathlib.Path(images_path)
+    if not images_path.exists():
+        click.secho('Error: No such directory',
+                    fg='red', err=True) 
+        sys.exit(1)
+    if not images_path.is_dir():
+        click.secho('Error: {} isn\'t directory'.format(str(images_path)),
+                    fg='red', err=True)
+        sys.exit(1)
+    click.echo('Path to target directory: {}'.format(images_path.resolve()))
+
+    # Count only jpg images in path
+    images = [image for image in images_path.glob('*.jpg')]
+    length = len(images)
+    click.echo('Reading files for process: {} media\n'.format(length))
+
+    # Initialize with recognition mode
     if mode == 'object':
         keyword = click.prompt('Please enter a keyward')
 
-        # Validate path to images
-        images_path = pathlib.Path(images_path)
-        if not images_path.exists():
-            click.secho('Error: No such directory',
-                        fg='red', err=True) 
-            sys.exit(1)
-        if not images_path.is_dir():
-            click.secho('Error: {} isn\'t directory'.format(str(images_path)),
-                        fg='red', err=True)
-            sys.exit(1)
-        click.echo('Path to target directory: {}'.format(images_path.resolve()))
-
         # Validate and create a directory for output files
+        # TODO: Only 'dest' dir creation isn't needed
         dest = pathlib.Path(dest)
         ensure_dir(dest)
         ensure_dir(dest / keyword)
         ensure_dir(dest / 'others')
         click.echo('Created a directory for results: {}'.format(dest.resolve()))
-        
-        # Count only jpg images in path
-        images = [image for image in images_path.glob('*.jpg')]
-        length = len(images)
-        click.echo('Reading files for process: {} media\n'.format(length))
-
-        cva_url = config['default']['cva_url']
-        cva_key = config['default']['cva_key']
 
         with (dest / 'results.csv').open('w') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
@@ -176,30 +177,10 @@ def main(config, dest, mode, images_path):
                 writer.writerow(row)
 
     else:
-        # Validate path to images
-        images_path = pathlib.Path(images_path)
-        if not images_path.exists():
-            click.secho('Error: No such directory',
-                        fg='red', err=True) 
-            sys.exit(1)
-        if not images_path.is_dir():
-            click.secho('Error: {} isn\'t directory'.format(str(images_path)),
-                        fg='red', err=True)
-            sys.exit(1)
-        click.echo('Path to target directory: {}'.format(images_path.resolve()))
-
         # Validate and create a directory for output files
         dest = pathlib.Path(dest)
         ensure_dir(dest)
         click.echo('Created a directory for results: {}'.format(dest.resolve()))
-
-        # Count only jpg images in path
-        images = [image for image in images_path.glob('*.jpg')]
-        length = len(images)
-        click.echo('Reading files for process: {} media\n'.format(length))
-
-        cva_url = config['default']['cva_url']
-        cva_key = config['default']['cva_key']
 
         with (dest / 'results.csv').open('w') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
