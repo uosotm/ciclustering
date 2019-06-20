@@ -60,6 +60,8 @@ def ensure_dir(path):
                     fg='red', err=True)
         sys.exit(1)
 
+    return path
+
 def encode_image(image):
     image_content = image.read()
     return base64.b64encode(image_content).decode('UTF-8')
@@ -128,8 +130,8 @@ def main(config, dest, mode, images_path):
         # Validate and create a directory for output files
         dest = pathlib.Path(dest)
         ensure_dir(dest)
-        ensure_dir(dest / keyword)
-        ensure_dir(dest / 'others')
+        dest_keyword = ensure_dir(dest / keyword)
+        dest_others = ensure_dir(dest / 'others')
         click.echo('Created a directory for results: {}'.format(dest.resolve()))
         
         # Count only jpg images in path
